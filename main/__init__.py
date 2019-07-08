@@ -45,6 +45,7 @@ def create_app(config_class=DefaultConfig):
     from main.routes import main
     from roles.routes import roles
     from services.users.routes import users
+    from services.syllabus.routes import syllabus
 
     app.register_blueprint(logins)
     app.register_blueprint(main)
@@ -59,5 +60,6 @@ def create_app(config_class=DefaultConfig):
     app.register_blueprint(states)
     app.register_blueprint(users)
     app.register_blueprint(standards)
+    app.register_blueprint(syllabus)
 
     return app
