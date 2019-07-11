@@ -22,7 +22,7 @@ class Syllabus(db.Model):
     # Term of syllabus
     term = db.Column(db.String(200), nullable=False)
     # class number
-    class_no = db.Column(db.Integer, nullable=False)
+    class_no = db.Column(db.String(80), nullable=False)
     # subject
     subject = db.Column(db.String(80), nullable=False)
     # json for syllabus details for each section
@@ -52,10 +52,7 @@ class Syllabus(db.Model):
     def get_syllabus_combof_class_term_subject(cls, _class_no, _term, _subject):
         try:
             syllabus_object = cls.query.filter_by(class_no=_class_no, term=_term, subject=_subject).first()
-            if not syllabus_object:
-                return syllabus_object
-            else:
-                return syllabus_object
+            return syllabus_object
         except:
             return None
         
@@ -63,10 +60,7 @@ class Syllabus(db.Model):
     def get_syllabus_combo(cls, _syllabus_object):
         try:
             syllabus_combo_obj = cls.query.filter_by(class_no=_syllabus_object.class_no, term=_syllabus_object.term, subject=_syllabus_object.subject).first()
-            if not syllabus_combo_obj:
-                return syllabus_combo_obj
-            else:
-                return syllabus_combo_obj.serialize()
+            return syllabus_combo_obj
         except:
             return None
 

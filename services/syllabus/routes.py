@@ -12,38 +12,35 @@ from flask import Blueprint
 from flask import Response, request
 from json import dumps,loads
 from services.syllabus.models import Syllabus
+from services.syllabus.decorators import validate_add_syllabus, validate_syllabus_update
 
 
 syllabus = Blueprint('syllabus', __name__)
 
 
 @syllabus.route("/syllabus", methods=["POST"])
+@validate_add_syllabus
 def api_add_syllabus():
     syllabus = request.get_json()
-    syllabus_object = Syllabus(term = syllabus["term"], class_no = syllabus["class_no"], subject = syllabus["subject"], syllabus_details = dumps(syllabus["syllabus_details"]), syllabus_status = dumps(syllabus["syllabus_status"]))
-    syllabus_exist = Syllabus.get_syllabus_combo(syllabus_object)
-    if syllabus_exist:
-        result = {
-            "status": "Failure",
-            "message": "Combination of Term, Class and Subject already exists!!"
-        }
-    else:
-        syllabus_db = Syllabus.add_syllabus(syllabus_object)
-        if syllabus_db:
-            result = {
-                "status": "success",
-                "message": "syllabus added"
-            }
+    syllabus_object = Syllabus(term = syllabus["term"], class_no = syllabus["class_no"], subject = syllabus["subject"], syllabus_details = dumps(syllabus["syllabus_details"]))
 
-    return Response(dumps(result), 200, mimetype='application/json')
+    syllabus_db = Syllabus.add_syllabus(syllabus_object)
+    if syllabus_db:
+        result = {
+            "status": "success",
+            "message": "syllabus added"
+        }
+
+        return Response(dumps(result), 200, mimetype='application/json')
 
 
 @syllabus.route("/syllabus/all", methods=["GET"])
 def api_syllabus_all():
+    syllabus_all = Syllabus.get_whole_syllabus()
     result = {
         "status": "success",
         "message": "syllabus display",
-        "syllabus": Syllabus.get_whole_syllabus()
+        "syllabus": syllabus_all
     }
     return Response(dumps(result), 200, mimetype='application/json')
 
@@ -80,19 +77,15 @@ def api_syllabus_combo():
     return Response({"message": 'fetch done'}, 201, mimetype='application/json')
 
 @syllabus.route("/syllabus/combo", methods=["PUT"])
+@validate_syllabus_update
 def api_update_syllabus():
     request_data = request.get_json()
     class_no = request.headers.get('class_no')
     term = request.headers.get('term')
     subject = request.headers.get('subject')
-    syllabus = Syllabus.get_syllabus_combof_class_term_subject(class_no, term, subject)
-    if not syllabus:
-        error = {
-            "status": "Failure",
-            "message": "record not found"
-        }
 
-        return Response(dumps(error), 501, mimetype='application/json')
+    syllabus = Syllabus.get_syllabus_combof_class_term_subject(class_no, term, subject)
+
     if "syllabus_details" in request_data:
         syllabus.syllabus_details = dumps(request_data["syllabus_details"])
     if "syllabus_status" in request_data:
