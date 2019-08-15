@@ -13,6 +13,7 @@ from flask import Response, request
 from json import dumps
 from config import DefaultConfig
 from config.decorators import validate_config, authorize_config
+from attributes.institutions.models import Institutions
 
 config = Blueprint('config', __name__)
 
@@ -54,9 +55,11 @@ def get_config_all():
 @validate_config
 def get_config_menu():
     header = request.headers
+    institution = Institutions.query.all().first
     result = {
         "status": "success",
         "message": "Config retrieved.",
+        "institution": institution.serialize(),
         "menu": DefaultConfig().menu[header["role_keyword"]]
     }
     return Response(dumps(result), 200, mimetype='application/json')
