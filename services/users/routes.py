@@ -11,9 +11,12 @@
 from flask import Blueprint
 from flask import Response, request
 from json import dumps
-from services.users.models import Users
+from flask import Blueprint
+from services.users.models import *
 from roles.models import UserRoles, Roles
+from flask import Blueprint
 from services.users.decorators import validate_registration, validate_user_update
+# from flask import Blueprint
 # from services.users.utils import add_user_and_role
 from flask_jwt_extended import (jwt_refresh_token_required, get_jwt_identity)
 

@@ -17,6 +17,7 @@ class DefaultConfig:
     """
     JWT_SECRET_KEY = 'vanvia-hoder-api'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///vanvia.db'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:********@54.210.79.152/test_vanvia'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     CORS_HEADERS = 'Content-Type'
 

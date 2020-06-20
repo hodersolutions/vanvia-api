@@ -12,7 +12,7 @@ from flask import Blueprint
 from flask import Response, request
 from json import dumps
 from logins.decorators import validate_login
-from logins.models import UserLogin
+from logins.models import *
 from flask_jwt_extended import (create_refresh_token, jwt_refresh_token_required)
 
 
